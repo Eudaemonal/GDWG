@@ -56,8 +56,6 @@ namespace gdwg
 		void printGraph() const;
 	};
 
-
-
 	#include "Graph.tem"
 }
 
