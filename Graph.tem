@@ -8,13 +8,13 @@ Node<N,E>::Node()
 
 
 template<typename N, typename E>
-Node(const N& val)
+Node<N,E>::Node(const N& val)
 	: data_(val)
 {};
 	
 
 template<typename N, typename E>
-void setData(const N& val){
+void Node<N,E>::setData(const N& val){
 	data_ = val;
 }
 
@@ -27,7 +27,7 @@ void setData(const N& val){
 @return
 */
 template<typename N, typename E>
-bool addEdge(const E &w, std::shared_ptr<Node<N,E>> d) const
+bool Node<N,E>::addEdge(const E &w, std::shared_ptr<Node<N,E>> d) const
 {
 	for(unsigned int i=0; i!=next_.size();++i)
 		if(getWeight(i) == w && getDst(i)==d)
@@ -43,7 +43,7 @@ bool addEdge(const E &w, std::shared_ptr<Node<N,E>> d) const
 @return
 */
 template<typename N, typename E>
-bool deleteEdge(const E &w, std::shared_ptr<Node<N,E>> d){
+bool Node<N,E>::deleteEdge(const E &w, std::shared_ptr<Node<N,E>> d){
 	for(unsigned int i=0; i!=next_.size();++i)
 		if(getWeight(i) == w && getDst(i)==d){
 			next_.erase(next_.begin()+i);
@@ -54,27 +54,27 @@ bool deleteEdge(const E &w, std::shared_ptr<Node<N,E>> d){
 
 
 template<typename N, typename E>
-N getData()
+N Node<N,E>::getData()
 {
 	return data_;
 }
 
 
 template<typename N, typename E>
-unsigned int getNumEdge(){
+unsigned int Node<N,E>::getNumEdge(){
 	return next_.size();
 }
 
 
 
 template<typename N, typename E>
-E getWeight(const unsigned int idx){
+E Node<N,E>::getWeight(const unsigned int idx){
 	return std::get<0>(next_[idx]);
 }
 
 
 template<typename N, typename E>
-std::shared_ptr<Node<N,E>> getDst(const unsigned int idx){
+std::shared_ptr<Node<N,E>> Node<N,E>::getDst(const unsigned int idx){
 	return std::get<1>(next_[idx]);
 }
 
@@ -83,14 +83,14 @@ std::shared_ptr<Node<N,E>> getDst(const unsigned int idx){
  *
  */
 template<typename N, typename E>
-Graph()
+Graph<N,E>::Graph()
 {};
 
 		
 
 
 template<typename N, typename E>
-bool addNode(const N& val)
+bool Graph<N,E>::addNode(const N& val)
 {
 	std::shared_ptr<Node<N,E>> n (new Node<N,E>);
 	n->setData(val);
@@ -103,7 +103,7 @@ bool addNode(const N& val)
 
 
 template<typename N, typename E>
-bool addEdge(const N &src, const N &dst, const E &w){
+bool Graph<N,E>::addEdge(const N &src, const N &dst, const E &w){
 	std::shared_ptr<Node<N,E>> s (new Node<N,E>);
 	std::shared_ptr<Node<N,E>> d (new Node<N,E>);
 
@@ -118,7 +118,7 @@ bool addEdge(const N &src, const N &dst, const E &w){
 
 
 template<typename N, typename E>
-bool replace(const N& oldData, const N& newData){
+bool Graph<N,E>::replace(const N& oldData, const N& newData){
 	std::shared_ptr<Node<N,E>> n (new Node<N,E>);
 	if(!isNode(oldData))
 		throw std::runtime_error("Error: No node with oldData exist.");
@@ -134,7 +134,7 @@ bool replace(const N& oldData, const N& newData){
 
 
 template<typename N, typename E>
-void mergeReplace(const N& oldData, const N& newData){
+void Graph<N,E>::mergeReplace(const N& oldData, const N& newData){
 	if(!isNode(oldData)||!isNode(newData))
 		throw std::runtime_error("Error: One or two nodes with specified data do not exist.");
 	std::shared_ptr<Node<N,E>> old_node (new Node<N,E>);
@@ -151,7 +151,7 @@ void mergeReplace(const N& oldData, const N& newData){
 
 
 template<typename N, typename E>
-void deleteNode(const N& val) noexcept{
+void Graph<N,E>::deleteNode(const N& val) noexcept{
 	for(unsigned int i = 0; i<arr_.size(); ++i)
 		if(arr_[i]->getData() == val)
 			arr_.erase(arr_.begin()+i);
@@ -159,7 +159,7 @@ void deleteNode(const N& val) noexcept{
 
 
 template<typename N, typename E>
-void deleteEdge(const N& src, const N& dst, const E& w) noexcept {
+void Graph<N,E>::deleteEdge(const N& src, const N& dst, const E& w) noexcept {
 	if(!isNode(src))
 		return;
 	std::shared_ptr<Node<N,E>> s (new Node<N,E>);
@@ -173,13 +173,13 @@ void deleteEdge(const N& src, const N& dst, const E& w) noexcept {
 
 
 template<typename N, typename E>
-void clear() noexcept{
+void Graph<N,E>::clear() noexcept{
 	arr_.clear();
 }
 
 
 template<typename N, typename E>
-bool isNode(const N &val) const{
+bool Graph<N,E>::isNode(const N &val) const{
 	for(unsigned int i = 0; i<arr_.size(); ++i){
 		if(arr_[i]->getData() == val)
 			return true;
@@ -190,7 +190,7 @@ bool isNode(const N &val) const{
 
 
 template<typename N, typename E>
-bool isConnected(const N& val, const N& dst) const{
+bool Graph<N,E>::isConnected(const N& val, const N& dst) const{
 	if(!isNode(val)||!isNode(dst))
 		throw std::runtime_error("Error: One or two nodes with specified data do not exist.");
 	
@@ -207,7 +207,7 @@ bool isConnected(const N& val, const N& dst) const{
 
 		
 template<typename N, typename E>
-std::shared_ptr<Node<N,E>> findNode(const N &src){
+std::shared_ptr<Node<N,E>> Graph<N,E>::findNode(const N &src){
 	for(unsigned int i = 0; i<arr_.size(); ++i){
 		if(arr_[i]->getData() == src)
 			return arr_[i];
@@ -217,7 +217,7 @@ std::shared_ptr<Node<N,E>> findNode(const N &src){
 
 	
 template<typename N, typename E>
-void printNodes() const {
+void Graph<N,E>::printNodes() const {
 	for(unsigned int i = 0;i<arr_.size();++i){
 		std::cout << arr_[i]->getData()<<std::endl;
 	}
@@ -225,14 +225,14 @@ void printNodes() const {
 
 
 template<typename N, typename E>
-void printEdges(const N& val) const{
+void Graph<N,E>::printEdges(const N& val) const{
 			
 }
 
 
 
 template<typename N, typename E>		
-void printGraph() const{
+void Graph<N,E>::printGraph() const{
 	std::cout <<"size: " << arr_.size() << std::endl;
 	for(unsigned int i = 0;i<arr_.size();++i){
 		std::cout << "Adjacency list of vertex " << arr_[i]->getData()<<std::endl;
