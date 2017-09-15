@@ -36,9 +36,10 @@ namespace gdwg
 
 	public:
 		Graph();
-		Graph(Graph<N,E> &);
+		Graph(const Graph<N,E> &);
 		Graph(Graph<N,E> &&);
-		operator=()
+		operator=(const Graph<N,E> &);
+		operator=(Graph<N,E> &&);
 
 		bool addNode(const N&val);
 		bool addEdge(const N &src, const N &dst, const E &w);
