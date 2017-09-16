@@ -248,11 +248,58 @@ std::shared_ptr<Node<N,E>> Graph<N,E>::findNode(const N &src) const{
 	return NULL;
 }
 
+template <typename A, typename B>
+void zip(
+    const std::vector<A> &a, 
+    const std::vector<B> &b, 
+    std::vector<std::pair<A,B>> &zipped)
+{
+    for(size_t i=0; i<a.size(); ++i)
+    {
+        zipped.push_back(std::make_pair(a[i], b[i]));
+    }
+}
+
+
+template <typename A, typename B>
+void unzip(
+    const std::vector<std::pair<A, B>> &zipped, 
+    std::vector<A> &a, 
+    std::vector<B> &b)
+{
+    for(size_t i=0; i<a.size(); i++)
+    {
+        a[i] = zipped[i].first;
+        b[i] = zipped[i].second;
+    }
+}
+
 	
 template<typename N, typename E>
 void Graph<N,E>::printNodes() const {
+	std::vector<int> out_degree;
+	std::vector<N> data_val;
 	for(unsigned int i = 0;i<arr_.size();++i){
-		std::cout << arr_[i]->getData()<<std::endl;
+		out_degree.push_back(arr_[i]->getNumEdge());
+		data_val.push_back(arr_[i]->getData());
+	}
+	std::vector<std::pair<N, int>> zipped;
+	zip(data_val, out_degree, zipped);
+
+	std::sort(std::begin(zipped), std::end(zipped), 
+        [&](const auto& a, const auto& b)
+        {
+            return a.first < b.first;
+        });
+
+	std::stable_sort(std::begin(zipped), std::end(zipped), 
+        [&](const auto& a, const auto& b)
+        {
+            return a.second < b.second;
+        });
+
+	for(unsigned int i = 0;i<arr_.size();++i){
+		std::cout << zipped[i].first<<std::endl;
 	}
 }
 
@@ -263,10 +310,12 @@ void Graph<N,E>::printEdges(const N& val) const{
 	n = findNode(val);
 
 	std::cout << "Edge attached to Node " << val <<std::endl;
-	for(unsigned int i = 0;i<n->getNumEdge();++i){
-		std::cout << n->getDst(i)->getData() << " " << n->getWeight(i) <<std::endl;
-	}
-		
+	if(n->getNumEdge()==0)
+		std::cout << "(null)" <<std::endl;
+	else
+		for(unsigned int i = 0;i<n->getNumEdge();++i)
+			std::cout << n->getDst(i)->getData() << " " << n->getWeight(i) <<std::endl;
+
 }
 
 

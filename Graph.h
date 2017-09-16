@@ -54,8 +54,10 @@ namespace gdwg
 		void printNodes() const;
 		void printEdges(const N& val) const;
 		void printGraph() const;
-	};
 
+
+	};
+	
 	#include "Graph.tem"
 }
 
