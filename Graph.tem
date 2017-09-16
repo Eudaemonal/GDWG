@@ -27,10 +27,10 @@ void Node<N,E>::setData(const N& val){
 @return
 */
 template<typename N, typename E>
-bool Node<N,E>::addEdge(const E &w, std::shared_ptr<Node<N,E>> d) const
+bool Node<N,E>::addEdge(const E &w, std::shared_ptr<Node<N,E>> d)
 {
 	for(unsigned int i=0; i!=next_.size();++i)
-		if(getWeight(i) == w && getDst(i)==d)
+		if( std::get<0>(next_[i]) == w &&  std::get<1>(next_[i])==d)
 			return false;
 	next_.push_back(std::make_tuple(w, d));
 	return true;
@@ -84,7 +84,40 @@ std::shared_ptr<Node<N,E>> Node<N,E>::getDst(const unsigned int idx){
  */
 template<typename N, typename E>
 Graph<N,E>::Graph()
+{}
+
+
+template<typename N, typename E>
+Graph<N,E>::Graph(const Graph<N,E> &g){
+	for(unsigned int i=0; i!=g.arr_.size();++i)
+		arr_.push_back(g.arr_[i]);
+}
+
+
+template<typename N, typename E>
+Graph<N,E>::Graph(Graph<N,E> &&g)
+	:arr_(std::move(g.arr_))
 {};
+
+
+template<typename N, typename E>
+Graph<N,E>& Graph<N,E>::operator=(const Graph<N,E> &g){
+	if (this != &g){
+		for(unsigned int i = 0; i!=g.arr_.size(); ++i)
+			arr_.push_back(g.arr_[i]);
+	}
+	return *this;
+}
+
+
+
+template<typename N, typename E>
+Graph<N,E>& Graph<N,E>::operator=(Graph<N,E> &&g){
+	if(this != &g){
+		g.swap(*this);
+	}
+	return *this;
+}
 
 		
 
@@ -207,7 +240,7 @@ bool Graph<N,E>::isConnected(const N& val, const N& dst) const{
 
 		
 template<typename N, typename E>
-std::shared_ptr<Node<N,E>> Graph<N,E>::findNode(const N &src){
+std::shared_ptr<Node<N,E>> Graph<N,E>::findNode(const N &src) const{
 	for(unsigned int i = 0; i<arr_.size(); ++i){
 		if(arr_[i]->getData() == src)
 			return arr_[i];
@@ -226,7 +259,14 @@ void Graph<N,E>::printNodes() const {
 
 template<typename N, typename E>
 void Graph<N,E>::printEdges(const N& val) const{
-			
+	std::shared_ptr<Node<N,E>> n (new Node<N,E>);
+	n = findNode(val);
+
+	std::cout << "Edge attached to Node " << val <<std::endl;
+	for(unsigned int i = 0;i<n->getNumEdge();++i){
+		std::cout << n->getDst(i)->getData() << " " << n->getWeight(i) <<std::endl;
+	}
+		
 }
 
 

@@ -20,7 +20,7 @@ namespace gdwg
 		Node();
 		Node(const N&);
 		void setData(const N&);
-		bool addEdge(const E &w, std::shared_ptr<Node<N,E>> d) const;
+		bool addEdge(const E &w, std::shared_ptr<Node<N,E>> d);
 		bool deleteEdge(const E &w, std::shared_ptr<Node<N,E>> d);
 		N getData();
 		unsigned int getNumEdge();
@@ -38,8 +38,8 @@ namespace gdwg
 		Graph();
 		Graph(const Graph<N,E> &);
 		Graph(Graph<N,E> &&);
-		operator=(const Graph<N,E> &);
-		operator=(Graph<N,E> &&);
+		Graph<N,E>& operator=(const Graph<N,E> &);
+		Graph<N,E>& operator=(Graph<N,E> &&);
 
 		bool addNode(const N&val);
 		bool addEdge(const N &src, const N &dst, const E &w);
@@ -50,7 +50,7 @@ namespace gdwg
 		void clear() noexcept;
 		bool isNode(const N &val) const;
 		bool isConnected(const N& val, const N& dst) const;
-		std::shared_ptr<Node<N,E>> findNode(const N &src);
+		std::shared_ptr<Node<N,E>> findNode(const N &) const;
 		void printNodes() const;
 		void printEdges(const N& val) const;
 		void printGraph() const;
