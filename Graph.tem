@@ -312,9 +312,32 @@ void Graph<N,E>::printEdges(const N& val) const{
 	std::cout << "Edge attached to Node " << val <<std::endl;
 	if(n->getNumEdge()==0)
 		std::cout << "(null)" <<std::endl;
-	else
+	else{
+		std::vector<N> dst_data;
+		std::vector<E> edge_weight;
+		for(unsigned int i = 0;i<n->getNumEdge();++i){
+			dst_data.push_back(n->getDst(i)->getData());
+			edge_weight.push_back(n->getWeight(i));
+		}
+		std::vector<std::pair<N, E>> zipped;
+		zip(dst_data, edge_weight, zipped);
+
+		std::sort(std::begin(zipped), std::end(zipped), 
+		[&](const auto& a, const auto& b)
+		{
+			return a.first < b.first;
+        	});
+
+		std::stable_sort(std::begin(zipped), std::end(zipped), 
+		[&](const auto& a, const auto& b)
+		{
+			return a.second < b.second;
+		});
+
+
 		for(unsigned int i = 0;i<n->getNumEdge();++i)
-			std::cout << n->getDst(i)->getData() << " " << n->getWeight(i) <<std::endl;
+			std::cout << zipped[i].first << " " << zipped[i].second <<std::endl;
+	}
 
 }
 
