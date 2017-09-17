@@ -382,7 +382,7 @@ void Graph<N,E>::printEdges(const N& val) const{
 }
 
 
-template<typename N, typename E>	
+template<typename N, typename E>
 void Graph<N,E>::begin() const{
 	iterator_ = arr_.cbegin();
 }

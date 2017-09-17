@@ -9,6 +9,6 @@ do
 	./test$i > out$i.txt
 	diff out$i.txt result$i.txt
 	rm out$i.txt
-
-done    
+	rm test$i
+done
 
