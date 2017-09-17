@@ -19,7 +19,6 @@ void Node<N,E>::setData(const N& val){
 }
 
 
-		
 /** Add edge to a node
 	return true if edge is added to the node
 	return false if edge with same weight, destination already exists
