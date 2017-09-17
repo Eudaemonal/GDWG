@@ -349,7 +349,7 @@ void Graph<N,E>::printEdges(const N& val) const{
 	std::shared_ptr<Node<N,E>> n (new Node<N,E>);
 	n = findNode(val);
 
-	std::cout << "Edge attached to Node " << val <<std::endl;
+	std::cout << "Edges attached to Node " << val <<std::endl;
 	if(n->getNumEdge()==0)
 		std::cout << "(null)" <<std::endl;
 	else{
@@ -379,22 +379,6 @@ void Graph<N,E>::printEdges(const N& val) const{
 			std::cout << zipped[i].first << " " << zipped[i].second <<std::endl;
 	}
 
-}
-
-
-
-template<typename N, typename E>		
-void Graph<N,E>::printGraph() const{
-	std::cout <<"size: " << arr_.size() << std::endl;
-	for(unsigned int i = 0;i<arr_.size();++i){
-		std::cout << "Adjacency list of vertex " << arr_[i]->getData()<<std::endl;
-		for(unsigned int j=0;j<arr_[i]->getNumEdge();++j)
-			std::cout << arr_[i]->getDst(j)->getData() << " -> ";
-		std::cout <<std::endl;
-		for(unsigned int j=0;j<arr_[i]->getNumEdge();++j)
-			std::cout << arr_[i]->getWeight(j) << " -> ";
-		std::cout <<std::endl;
-	}
 }
 
 

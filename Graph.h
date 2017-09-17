@@ -54,8 +54,7 @@ namespace gdwg
 		std::shared_ptr<Node<N,E>> findNode(const N &) const;
 		void printNodes() const;
 		void printEdges(const N& val) const;
-		void printGraph() const;
-
+		
 		void begin() const;
 		bool end() const;
 		void next() const;
