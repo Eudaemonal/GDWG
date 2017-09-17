@@ -174,17 +174,27 @@ void Graph<N,E>::mergeReplace(const N& oldData, const N& newData){
 	old_node = findNode(oldData);
 
 	std::shared_ptr<Node<N,E>> new_node (new Node<N,E>);
-	new_node = findNode(oldData);
+	new_node = findNode(newData);
 
 	for(unsigned int i=0; i!=old_node->getNumEdge();++i)
 		new_node->addEdge(old_node->getWeight(i), old_node->getDst(i));
+	for(unsigned int i=0;i!=arr_.size();++i)
+		for(unsigned int j=0;j!= arr_[i]->getNumEdge();++j)
+			if(arr_[i]->getDst(j)==old_node){
+				E weight = arr_[i]->getWeight(j);
+				arr_[i]->deleteEdge(weight, old_node);
+				arr_[i]->addEdge(weight, new_node);
+			}
+	
 			
-	deleteNode(old_node);
+	deleteNode(oldData);
 }
 
 
 template<typename N, typename E>
 void Graph<N,E>::deleteNode(const N& val) noexcept{
+	if(!isNode(val))
+		return;
 	for(unsigned int i = 0; i<arr_.size(); ++i)
 		if(arr_[i]->getData() == val)
 			arr_.erase(arr_.begin()+i);
@@ -306,6 +316,9 @@ void Graph<N,E>::printNodes() const {
 
 template<typename N, typename E>
 void Graph<N,E>::printEdges(const N& val) const{
+	if(!isNode(val))
+		throw std::runtime_error("Error: Node with specified data does not exist.");
+
 	std::shared_ptr<Node<N,E>> n (new Node<N,E>);
 	n = findNode(val);
 
