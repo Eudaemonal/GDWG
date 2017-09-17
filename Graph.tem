@@ -89,8 +89,14 @@ Graph<N,E>::Graph()
 
 template<typename N, typename E>
 Graph<N,E>::Graph(const Graph<N,E> &g){
-	for(unsigned int i=0; i!=g.arr_.size();++i)
-		arr_.push_back(g.arr_[i]);
+	arr_.clear();
+	for(unsigned int i = 0; i<g.arr_.size(); ++i){
+		auto ptr = std::make_shared<Node<N,E>>(g.arr_[i]->getData());
+		arr_.push_back(ptr);
+		for(unsigned int j=0;j<g.arr_[i]->getNumEdge();++j){
+			ptr->addEdge(g.arr_[i]->getWeight(j), std::make_shared<Node<N,E>>(g.arr_[i]->getDst(j)->getData()));
+		}
+	}
 }
 
 
@@ -103,8 +109,14 @@ Graph<N,E>::Graph(Graph<N,E> &&g)
 template<typename N, typename E>
 Graph<N,E>& Graph<N,E>::operator=(const Graph<N,E> &g){
 	if (this != &g){
-		for(unsigned int i = 0; i!=g.arr_.size(); ++i)
-			arr_.push_back(g.arr_[i]);
+		arr_.clear();
+		for(unsigned int i = 0; i<g.arr_.size(); ++i){
+			auto ptr = std::make_shared<Node<N,E>>(g.arr_[i]->getData());
+			arr_.push_back(ptr);
+			for(unsigned int j=0;j<g.arr_[i]->getNumEdge();++j){
+				ptr->addEdge(g.arr_[i]->getWeight(j), std::make_shared<Node<N,E>>(g.arr_[i]->getDst(j)->getData()));
+			}
+		}
 	}
 	return *this;
 }
@@ -114,7 +126,10 @@ Graph<N,E>& Graph<N,E>::operator=(const Graph<N,E> &g){
 template<typename N, typename E>
 Graph<N,E>& Graph<N,E>::operator=(Graph<N,E> &&g){
 	if(this != &g){
-		g.swap(*this);
+		arr_.clear();
+		for(unsigned int i=0;i<g.arr_.size();++i)
+			arr_.push_back(g.arr_[i]);
+		g.arr_.clear();
 	}
 	return *this;
 }
@@ -182,7 +197,7 @@ void Graph<N,E>::mergeReplace(const N& oldData, const N& newData){
 		for(unsigned int j=0;j!= arr_[i]->getNumEdge();++j)
 			if(arr_[i]->getDst(j)==old_node){
 				E weight = arr_[i]->getWeight(j);
-				arr_[i]->deleteEdge(weight, old_node);
+				if(arr_[i]->deleteEdge(weight, old_node)) j--;
 				arr_[i]->addEdge(weight, new_node);
 			}
 	
@@ -195,9 +210,21 @@ template<typename N, typename E>
 void Graph<N,E>::deleteNode(const N& val) noexcept{
 	if(!isNode(val))
 		return;
+	std::shared_ptr<Node<N,E>> del_node (new Node<N,E>);
+	del_node = findNode(val);
+
+	for(unsigned int i=0;i!=arr_.size();++i)
+		for(unsigned int j=0;j< arr_[i]->getNumEdge();++j)
+			if(arr_[i]->getDst(j)==del_node){
+				E weight = arr_[i]->getWeight(j);
+				if(arr_[i]->deleteEdge(weight, del_node)) j--;
+			}
+
+
 	for(unsigned int i = 0; i<arr_.size(); ++i)
 		if(arr_[i]->getData() == val)
 			arr_.erase(arr_.begin()+i);
+
 }
 
 
