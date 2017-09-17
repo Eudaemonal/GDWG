@@ -54,7 +54,7 @@ bool Node<N,E>::deleteEdge(const E &w, std::shared_ptr<Node<N,E>> d){
 
 
 template<typename N, typename E>
-N Node<N,E>::getData()
+N& Node<N,E>::getData()
 {
 	return data_;
 }
@@ -398,5 +398,25 @@ void Graph<N,E>::printGraph() const{
 }
 
 
+template<typename N, typename E>	
+void Graph<N,E>::begin() const{
+	iterator_ = arr_.cbegin();
+}
 
+
+template<typename N, typename E>
+bool Graph<N,E>::end() const{
+	return iterator_ == arr_.cend();
+}
+
+template<typename N, typename E>
+void Graph<N,E>::next() const{
+	++iterator_;
+}
+
+
+template<typename N, typename E>
+const N& Graph<N,E>::value() const{
+	return (*iterator_)->getData();
+}
 

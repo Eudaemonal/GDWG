@@ -22,7 +22,7 @@ namespace gdwg
 		void setData(const N&);
 		bool addEdge(const E &w, std::shared_ptr<Node<N,E>> d);
 		bool deleteEdge(const E &w, std::shared_ptr<Node<N,E>> d);
-		N getData();
+		N& getData();
 		unsigned int getNumEdge();
 		E getWeight(const unsigned int idx);
 		std::shared_ptr<Node<N,E>> getDst(const unsigned int idx);
@@ -33,7 +33,8 @@ namespace gdwg
 	class Graph{
 	private:
 		std::vector<std::shared_ptr<Node<N,E>>> arr_;
-
+		mutable typename std::vector<std::shared_ptr<Node<N, E>>>::const_iterator iterator_;
+		
 	public:
 		Graph();
 		Graph(const Graph<N,E> &);
@@ -55,7 +56,10 @@ namespace gdwg
 		void printEdges(const N& val) const;
 		void printGraph() const;
 
-
+		void begin() const;
+		bool end() const;
+		void next() const;
+		const N& value() const;
 	};
 	
 	#include "Graph.tem"
