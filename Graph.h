@@ -12,29 +12,34 @@ namespace gdwg
 {
 	template <typename N, typename E> 
 	class Node{
+	using node_ptr = std::shared_ptr<Node<N,E>>;
+
 	private:
 		N data_;
-		std::vector<std::tuple<E, std::shared_ptr<Node<N,E>>>> next_;
+		std::vector<std::tuple<E, node_ptr>> next_;
 
 	public:
 		Node();
 		Node(const N&);
 		void setData(const N&);
-		bool addEdge(const E &w, std::shared_ptr<Node<N,E>> d);
-		bool deleteEdge(const E &w, std::shared_ptr<Node<N,E>> d);
+		bool addEdge(const E &w, node_ptr d);
+		bool deleteEdge(const E &w, node_ptr d);
 		N& getData();
 		unsigned int getNumEdge();
 		E getWeight(const unsigned int idx);
-		std::shared_ptr<Node<N,E>> getDst(const unsigned int idx);
+		node_ptr getDst(const unsigned int idx);
 
 	};
 	
 	template <typename N, typename E> 
 	class Graph{
+	using node_ptr = std::shared_ptr<Node<N,E>>;
 	private:
-		std::vector<std::shared_ptr<Node<N,E>>> arr_;
-		mutable typename std::vector<std::shared_ptr<Node<N, E>>>::const_iterator iterator_;
+		std::vector<node_ptr> arr_;
+		mutable typename std::vector<node_ptr>::const_iterator iterator_;
 		
+		node_ptr findNode(const N &) const;
+
 	public:
 		Graph();
 		Graph(const Graph<N,E> &);
@@ -51,7 +56,6 @@ namespace gdwg
 		void clear() noexcept;
 		bool isNode(const N &val) const;
 		bool isConnected(const N& val, const N& dst) const;
-		std::shared_ptr<Node<N,E>> findNode(const N &) const;
 		void printNodes() const;
 		void printEdges(const N& val) const;
 		

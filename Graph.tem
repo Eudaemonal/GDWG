@@ -26,7 +26,7 @@ void Node<N,E>::setData(const N& val){
 @return
 */
 template<typename N, typename E>
-bool Node<N,E>::addEdge(const E &w, std::shared_ptr<Node<N,E>> d)
+bool Node<N,E>::addEdge(const E &w, node_ptr d)
 {
 	for(unsigned int i=0; i!=next_.size();++i)
 		if( std::get<0>(next_[i]) == w &&  std::get<1>(next_[i])==d)
@@ -42,7 +42,7 @@ bool Node<N,E>::addEdge(const E &w, std::shared_ptr<Node<N,E>> d)
 @return
 */
 template<typename N, typename E>
-bool Node<N,E>::deleteEdge(const E &w, std::shared_ptr<Node<N,E>> d){
+bool Node<N,E>::deleteEdge(const E &w, node_ptr d){
 	for(unsigned int i=0; i!=next_.size();++i)
 		if(getWeight(i) == w && getDst(i)==d){
 			next_.erase(next_.begin()+i);
@@ -73,7 +73,7 @@ E Node<N,E>::getWeight(const unsigned int idx){
 
 
 template<typename N, typename E>
-std::shared_ptr<Node<N,E>> Node<N,E>::getDst(const unsigned int idx){
+typename Node<N,E>::node_ptr Node<N,E>::getDst(const unsigned int idx){
 	return std::get<1>(next_[idx]);
 }
 
@@ -139,7 +139,7 @@ Graph<N,E>& Graph<N,E>::operator=(Graph<N,E> &&g){
 template<typename N, typename E>
 bool Graph<N,E>::addNode(const N& val)
 {
-	std::shared_ptr<Node<N,E>> n (new Node<N,E>);
+	node_ptr n (new Node<N,E>);
 	n->setData(val);
 	if(isNode(val))
 		return false;
@@ -151,8 +151,8 @@ bool Graph<N,E>::addNode(const N& val)
 
 template<typename N, typename E>
 bool Graph<N,E>::addEdge(const N &src, const N &dst, const E &w){
-	std::shared_ptr<Node<N,E>> s (new Node<N,E>);
-	std::shared_ptr<Node<N,E>> d (new Node<N,E>);
+	node_ptr s (new Node<N,E>);
+	node_ptr d (new Node<N,E>);
 
 	if(!isNode(src)||!isNode(dst))
 	       throw std::runtime_error("Error: One or two nodes not exist.");
@@ -166,7 +166,7 @@ bool Graph<N,E>::addEdge(const N &src, const N &dst, const E &w){
 
 template<typename N, typename E>
 bool Graph<N,E>::replace(const N& oldData, const N& newData){
-	std::shared_ptr<Node<N,E>> n (new Node<N,E>);
+	node_ptr n (new Node<N,E>);
 	if(!isNode(oldData))
 		throw std::runtime_error("Error: No node with oldData exist.");
 
@@ -184,10 +184,10 @@ template<typename N, typename E>
 void Graph<N,E>::mergeReplace(const N& oldData, const N& newData){
 	if(!isNode(oldData)||!isNode(newData))
 		throw std::runtime_error("Error: One or two nodes with specified data do not exist.");
-	std::shared_ptr<Node<N,E>> old_node (new Node<N,E>);
+	node_ptr old_node (new Node<N,E>);
 	old_node = findNode(oldData);
 
-	std::shared_ptr<Node<N,E>> new_node (new Node<N,E>);
+	node_ptr new_node (new Node<N,E>);
 	new_node = findNode(newData);
 
 	for(unsigned int i=0; i!=old_node->getNumEdge();++i)
@@ -209,7 +209,7 @@ template<typename N, typename E>
 void Graph<N,E>::deleteNode(const N& val) noexcept{
 	if(!isNode(val))
 		return;
-	std::shared_ptr<Node<N,E>> del_node (new Node<N,E>);
+	node_ptr del_node (new Node<N,E>);
 	del_node = findNode(val);
 
 	for(unsigned int i=0;i!=arr_.size();++i)
@@ -231,8 +231,8 @@ template<typename N, typename E>
 void Graph<N,E>::deleteEdge(const N& src, const N& dst, const E& w) noexcept {
 	if(!isNode(src))
 		return;
-	std::shared_ptr<Node<N,E>> s (new Node<N,E>);
-	std::shared_ptr<Node<N,E>> d (new Node<N,E>);
+	node_ptr s (new Node<N,E>);
+	node_ptr d (new Node<N,E>);
 
 	s = findNode(src);
 	d = findNode(dst);
@@ -263,8 +263,8 @@ bool Graph<N,E>::isConnected(const N& val, const N& dst) const{
 	if(!isNode(val)||!isNode(dst))
 		throw std::runtime_error("Error: One or two nodes with specified data do not exist.");
 	
-	std::shared_ptr<Node<N,E>> s (new Node<N,E>);
-	std::shared_ptr<Node<N,E>> d (new Node<N,E>);
+	node_ptr s (new Node<N,E>);
+	node_ptr d (new Node<N,E>);
 	s = findNode(val);
 	d = findNode(dst);
 
@@ -276,7 +276,7 @@ bool Graph<N,E>::isConnected(const N& val, const N& dst) const{
 
 		
 template<typename N, typename E>
-std::shared_ptr<Node<N,E>> Graph<N,E>::findNode(const N &src) const{
+typename Graph<N,E>::node_ptr Graph<N,E>::findNode(const N &src) const{
 	for(unsigned int i = 0; i<arr_.size(); ++i){
 		if(arr_[i]->getData() == src)
 			return arr_[i];
@@ -345,7 +345,7 @@ void Graph<N,E>::printEdges(const N& val) const{
 	if(!isNode(val))
 		throw std::runtime_error("Error: Node with specified data does not exist.");
 
-	std::shared_ptr<Node<N,E>> n (new Node<N,E>);
+	node_ptr n (new Node<N,E>);
 	n = findNode(val);
 
 	std::cout << "Edges attached to Node " << val <<std::endl;
