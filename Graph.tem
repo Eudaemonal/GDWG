@@ -12,7 +12,8 @@ Node<N,E>::Node(const N& val)
 	: data_(val)
 {};
 	
-
+/** Set value of node
+*/
 template<typename N, typename E>
 void Node<N,E>::setData(const N& val){
 	data_ = val;
@@ -22,8 +23,6 @@ void Node<N,E>::setData(const N& val){
 /** Add edge to a node
 	return true if edge is added to the node
 	return false if edge with same weight, destination already exists
-@param 
-@return
 */
 template<typename N, typename E>
 bool Node<N,E>::addEdge(const E &w, node_ptr d)
@@ -38,8 +37,6 @@ bool Node<N,E>::addEdge(const E &w, node_ptr d)
 /** Delete edge from a node
 	return true if edge is deleted from the node
 	return false if edge with specified weight and destination not found
-@param 
-@return
 */
 template<typename N, typename E>
 bool Node<N,E>::deleteEdge(const E &w, node_ptr d){
@@ -51,27 +48,31 @@ bool Node<N,E>::deleteEdge(const E &w, node_ptr d){
 	return false;
 }
 
-
+/** Get value of node
+*/
 template<typename N, typename E>
 N& Node<N,E>::getData()
 {
 	return data_;
 }
 
-
+/** Get number of outgoing edge of node
+*/
 template<typename N, typename E>
 unsigned int Node<N,E>::getNumEdge(){
 	return next_.size();
 }
 
 
-
+/** Get weight of idx edge in a node
+*/
 template<typename N, typename E>
 E Node<N,E>::getWeight(const unsigned int idx){
 	return std::get<0>(next_[idx]);
 }
 
-
+/** Get pointer of destination node pointed by idx edge
+*/
 template<typename N, typename E>
 typename Node<N,E>::node_ptr Node<N,E>::getDst(const unsigned int idx){
 	return std::get<1>(next_[idx]);
@@ -85,7 +86,8 @@ template<typename N, typename E>
 Graph<N,E>::Graph()
 {}
 
-
+/** Copy Constructor
+*/
 template<typename N, typename E>
 Graph<N,E>::Graph(const Graph<N,E> &g){
 	arr_.clear();
@@ -98,13 +100,15 @@ Graph<N,E>::Graph(const Graph<N,E> &g){
 	}
 }
 
-
+/** Move Constructor
+*/
 template<typename N, typename E>
 Graph<N,E>::Graph(Graph<N,E> &&g)
 	:arr_(std::move(g.arr_))
 {};
 
-
+/** Copy Assignment
+*/
 template<typename N, typename E>
 Graph<N,E>& Graph<N,E>::operator=(const Graph<N,E> &g){
 	if (this != &g){
@@ -121,7 +125,8 @@ Graph<N,E>& Graph<N,E>::operator=(const Graph<N,E> &g){
 }
 
 
-
+/** Move Assignment
+*/
 template<typename N, typename E>
 Graph<N,E>& Graph<N,E>::operator=(Graph<N,E> &&g){
 	if(this != &g){
@@ -134,8 +139,8 @@ Graph<N,E>& Graph<N,E>::operator=(Graph<N,E> &&g){
 }
 
 		
-
-
+/** Add node to graph
+*/
 template<typename N, typename E>
 bool Graph<N,E>::addNode(const N& val)
 {
@@ -148,7 +153,8 @@ bool Graph<N,E>::addNode(const N& val)
 	return true;
 }
 
-
+/** Add Edge to node
+*/
 template<typename N, typename E>
 bool Graph<N,E>::addEdge(const N &src, const N &dst, const E &w){
 	node_ptr s (new Node<N,E>);
