@@ -144,11 +144,12 @@ Graph<N,E>& Graph<N,E>::operator=(Graph<N,E> &&g){
 template<typename N, typename E>
 bool Graph<N,E>::addNode(const N& val)
 {
-	node_ptr n (new Node<N,E>);
-	n->setData(val);
+	//node_ptr n (new Node<N,E>);
+	//n->setData(val);
+
 	if(isNode(val))
 		return false;
-	arr_.push_back(n);
+	arr_.push_back(std::make_shared<Node<N,E>>(Node<N,E>{val}));
 	
 	return true;
 }
@@ -205,8 +206,7 @@ void Graph<N,E>::mergeReplace(const N& oldData, const N& newData){
 				if(arr_[i]->deleteEdge(weight, old_node)) j--;
 				arr_[i]->addEdge(weight, new_node);
 			}
-	
-			
+
 	deleteNode(oldData);
 }
 
